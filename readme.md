@@ -46,7 +46,7 @@ A simple, educational version control system implemented in Python that demonstr
 ### From PyPI
 
 ```bash
-pip install py-vcs-lite
+pip install vcs-core
 ```
 
 ### Local Installation
