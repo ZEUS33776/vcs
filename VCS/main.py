@@ -1,36 +1,14 @@
-
-
 import sys
 import os
-def init(PATH=os.getcwd()):
-    current_dir = os.getcwd()
-    dirs=(os.listdir(current_dir))
-    if ".vcs" in dirs:
-        print("[!] Version control system already initialized in this directory.")
-        return
-    print(f"[✓] Initialized version control system at {PATH}")
-    main_folder = ".vcs"
-    subfolders = ["objects", "commits"]
-    files = ["index", "HEAD"]
-    os.makedirs(main_folder, exist_ok=True)
-    for folder in subfolders:
-        os.makedirs(os.path.join(main_folder, folder), exist_ok=True)
-    for file in files:
-        with open(os.path.join(main_folder, file), 'w') as f:
-            f.write("")
+from vcs.commands.add import add
+from vcs.commands.init import init
+from vcs.commands.commit import commit
+VCS_DIR = ".vcs"
+CONFIG_FILE = os.path.join(VCS_DIR, "config")
 
+def is_config_present():
+    return os.path.exists(CONFIG_FILE) and os.path.getsize(CONFIG_FILE) > 0
 
-def add(file_path):
-    print(f"[✓] Add command received for file: {file_path}")
-
-def commit(message):
-    print(f"[✓] Commit command received with message: '{message}'")
-
-def log():
-    print("[✓] Log command received")
-
-def show(commit_id):
-    print(f"[✓] Show command received for commit: {commit_id}")
 
 def main():
     if len(sys.argv) < 2:
@@ -41,25 +19,32 @@ def main():
 
     if command == "init":
         init()
+    elif command == "auth": 
+        if len(sys.argv) != 4:
+            print("Usage: vcs auth <username> <email>")
+            return
+        username = sys.argv[2]
+        email = sys.argv[3]
+        config_content = f"username: {username}\nemail: {email}\n"
+        os.makedirs(VCS_DIR, exist_ok=True)
+        with open(CONFIG_FILE, "w") as f:
+            f.write(config_content)
+        print(f"Configured user: {username} <{email}>")
+
     elif command == "add":
         if len(sys.argv) < 3:
             print("Error: 'add' requires a filename.")
         else:
-            add(sys.argv[2])
+            for file in sys.argv[2:]:
+                add(file)
     elif command == "commit":
-        if len(sys.argv) < 3:
-            print("Error: 'commit' requires a message.")
+        if len(sys.argv) < 4 or sys.argv[2] != "-m":
+            print('Error: Usage: vcs commit -m "your message"')
+        elif not is_config_present():
+            print("Error: Author not configured. Use `vcs auth <username> <email>` first.")
         else:
-            commit(" ".join(sys.argv[2:]))
-    elif command == "log":
-        log()
-    elif command == "show":
-        if len(sys.argv) < 3:
-            print("Error: 'show' requires a commit ID.")
-        else:
-            show(sys.argv[2])
-    else:
-        print(f"Unknown command: {command}")
+            message = " ".join(sys.argv[3:])
+            commit(message)
 
 if __name__ == "__main__":
     main()
