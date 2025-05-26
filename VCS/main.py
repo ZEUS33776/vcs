@@ -3,6 +3,9 @@ import os
 from vcs.commands.add import add
 from vcs.commands.init import init
 from vcs.commands.commit import commit
+from vcs.commands.log import log
+from vcs.commands.show import show
+from vcs.commands.checkout import checkout
 VCS_DIR = ".vcs"
 CONFIG_FILE = os.path.join(VCS_DIR, "config")
 
@@ -45,6 +48,26 @@ def main():
         else:
             message = " ".join(sys.argv[3:])
             commit(message)
+    elif command == "log":
+        if not is_config_present():
+            print("Error: Author not configured. Use `vcs auth <username> <email>` first.")
+        else:
+            log()
+    elif command == "show":
+        if len(sys.argv) != 3:
+            print("Usage: vcs show <commit_hash>")
+        else:
+            commit_hash = sys.argv[2]
+            show(commit_hash)
+    elif command == "checkout":
+        if len(sys.argv) != 3:
+            print("Usage: vcs checkout <commit_hash>")
+        else:
+            commit_hash = sys.argv[2]
+            checkout(commit_hash)
+    else:
+        print(f"Unknown command: {command}")
+        print("Available commands: init, auth, add, commit, log, show, checkout")
 
 if __name__ == "__main__":
     main()
