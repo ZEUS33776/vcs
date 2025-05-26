@@ -1,5 +1,6 @@
 import os
 import zlib
+import datetime
 VCS_DIR = ".vcs"
 OBJECTS_DIR = os.path.join(VCS_DIR, "objects")
 INDEX_FILE = os.path.join(VCS_DIR, "index")
