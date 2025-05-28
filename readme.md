@@ -2,7 +2,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
+[![PyPI Downloads](https://static.pepy.tech/badge/vcs-core)](https://pepy.tech/projects/vcs-core)
 A simple, educational version control system implemented in Python that demonstrates the core concepts behind Git. Perfect for learning how version control systems work internally.
 
 ---
